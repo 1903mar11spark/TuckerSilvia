@@ -100,12 +100,6 @@ public class BankDAOImpl implements BankDAO {
 		
 	}
 	
-	public boolean login(String user, String pass) {
-		
-		
-		return true;
-	}
-	
 	
 	public int privileges(String user, String pass) {
 		int priv=0;
@@ -132,16 +126,83 @@ public class BankDAOImpl implements BankDAO {
 		
 	}
 	
-	public double getBalance(int userId, String Account) {
-		return 0.0;
+	public double getBalance(int userId, int account) {
+		double balance=0;
+		boolean exists = existingAccount(account);
+		//System.out.println("Account:" + exists);
+		if(exists) {
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "SELECT ACCOUNTS.BALANCE "
+					+ "FROM ACCOUNTS WHERE USER_ID = ? AND ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, userId);
+			stmt.setInt(2, account);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				balance = rs.getDouble("BALANCE");
+			}
+			//System.out.println("Current balance: " + balance);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
+		return balance;
+		}else {
+			System.out.println("Account does not exists");
+			System.out.println(" ");
+			return -1;
+		}
 	}
 	
-	public void updateBalance(String account, double balance) {
-		
+	public void updateBalance(int account, double balance) {
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "UPDATE ACCOUNTS "
+					+ "SET BALANCE = ? WHERE ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setDouble(1, balance);
+			stmt.setInt(2, account);
+			ResultSet rs = stmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	//accounts must be empty before deleted
-	public void deleteAccount(String user, String account) {
-		
+
+	
+	public void deleteAccount(int accountId) {
+	
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "DELETE "
+					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, accountId);
+			ResultSet rs = stmt.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean existingAccount(int accountId) {
+		boolean exists = false;
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "SELECT ACCOUNTS.ACCOUNT_ID "
+					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, accountId);
+			ResultSet rs = stmt.executeQuery();
+			exists = rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+		return exists;
+
 	}
 	
 	//what about their accounts? just the empty accounts? and their contact information?
