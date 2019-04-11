@@ -27,6 +27,9 @@ public class Driver {
 		exists = login(user,pass);
 		
 		System.out.println( login(user, pass));
+
+//two exists variables 
+
 		
 		int userId;
 		userId = bd.getUserId(user);

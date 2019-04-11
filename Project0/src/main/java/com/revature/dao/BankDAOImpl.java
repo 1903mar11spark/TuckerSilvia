@@ -20,8 +20,8 @@ public class BankDAOImpl implements BankDAO {
 	public List<BankUsers> getUsers(){
 		List<BankUsers> b1 = new ArrayList<BankUsers>();
 		try (Connection con = ConnectionUtil.getConnection()){
-			String sql = "SELECT bank_users.USER_ID, Bank_users.USER_NAME, Bank_users.PASWORD, bank_users.USER_TYPE, "
-					+ "Bank_users.FIRST_NAME, bank_users.LAST_NAME FROM BANK_USERS";
+			String sql = "SELECT BANK_USERS.USER_ID, BANK_USERS.USER_NAME, BANK_USERS.PASWORD, BANK_USERS.USER_TYPE, "
+					+ "BANK_USERS.FIRST_NAME, BANK_USERS.LAST_NAME FROM BANK_USERS";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -44,13 +44,12 @@ public class BankDAOImpl implements BankDAO {
 	public String checkLogin(String user) {
 		String pass = "none found";
 		try(Connection con = ConnectionUtil.getConnection()){
-			String sql = "SELECT BANK_USERS.PASWORD FROM BANK_USERS WHERE USER_NAME='"+user+"'";
-			System.out.println(sql);
+			String sql = "SELECT BANK_USERS.PASWORD FROM BANK_USERS WHERE USER_NAME=?";
 			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setString(1, user);
 			ResultSet rs = stmt.executeQuery();
-			System.out.println("after queary");
 			while(rs.next()) {
-				 pass = rs.getString("Pasword");
+				 pass = rs.getString("PASWORD");
       }
       } catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -103,8 +102,24 @@ public class BankDAOImpl implements BankDAO {
 	
 	
 	public int privileges(String user, String pass) {
-		
-		return 0;
+		int priv=0;
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "SELECT BANK_USERS.USER_TYPE "
+					+ "FROM BANK_USERS WHERE USER_NAME = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setString(1, user);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				priv= rs.getInt("USER_TYPE");
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return priv;
 	}
 	
 	public void newUser(String user, String pass, String fName, String lName) {
@@ -155,6 +170,7 @@ public class BankDAOImpl implements BankDAO {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public void deleteAccount(int accountId) {
 	
@@ -186,6 +202,7 @@ public class BankDAOImpl implements BankDAO {
 			
 		}
 		return exists;
+
 	}
 	public void newTransaction(int type, double amt, int accountId) {
 		try (Connection con = ConnectionUtil.getConnection()){
@@ -201,5 +218,28 @@ public class BankDAOImpl implements BankDAO {
 		}
 	}
 
+
+	}
+	
+	//what about their accounts? just the empty accounts? and their contact information?
+	
+	//DO NOT RUN THIS, IT MAY ACTUALLY WORK
+	public void deleteAllUsers() {
+		
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "DELETE * "
+					+ "FROM BANK_USERS";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				rs.deleteRow();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }
