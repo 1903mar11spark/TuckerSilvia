@@ -40,22 +40,25 @@ public class BankDAOImpl implements BankDAO {
 		return b1;
 	}
 
-	//this should be a PreparedStatement!
-	public String checkLogin(String user) {
-		String pass = "none found";
+
+	public boolean login(String user, String pass) {
+	
 		try(Connection con = ConnectionUtil.getConnection()){
 			String sql = "SELECT BANK_USERS.PASWORD FROM BANK_USERS WHERE USER_NAME=?";
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				 pass = rs.getString("PASWORD");
+				String Cpass = rs.getString("PASWORD");
+				 if (pass.equals(Cpass)) {
+					 return true;
+				 }
       }
       } catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-  		return pass;
+  		return false;
 	}
 	
 	public int getUserId(String user) {
@@ -82,7 +85,7 @@ public class BankDAOImpl implements BankDAO {
 	public List<Accounts> getAccounts(int userId) {
 		List<Accounts> a1 = new ArrayList<Accounts>();
 		try (Connection con = ConnectionUtil.getConnection()){
-			String sql = "SELECT ACCOUNTS.ACCOUNT_ID, ACCOUNTS.BALANCE "
+			String sql = "SELECT ACCOUNTS.ACCOUNT_ID ,ACCOUNTS.BALANCE "
 					+ "FROM ACCOUNTS WHERE USER_ID = ?";
 			
 			PreparedStatement stmt = con.prepareStatement(sql);
@@ -101,14 +104,14 @@ public class BankDAOImpl implements BankDAO {
 	}
 	
 	
-	public int privileges(String user, String pass) {
+	public int privileges(int userID) {
 		int priv=0;
 		try (Connection con = ConnectionUtil.getConnection()){
 			String sql = "SELECT BANK_USERS.USER_TYPE "
-					+ "FROM BANK_USERS WHERE USER_NAME = ?";
+					+ "FROM BANK_USERS WHERE USER_ID = ?";
 			
 			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setString(1, user);
+			stmt.setInt(1, userID);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				priv= rs.getInt("USER_TYPE");
@@ -122,8 +125,20 @@ public class BankDAOImpl implements BankDAO {
 		return priv;
 	}
 	
+	
 	public void newUser(String user, String pass, String fName, String lName) {
-		
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "{call SP_NEW_USER(?,?,?,?)}";
+			CallableStatement cs = con.prepareCall(sql);
+			cs.setString(1, user);
+			cs.setString(2, pass);
+			cs.setString(3, fName);
+			cs.setString(4, lName);
+			cs.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public double getBalance(int userId, int account) {
@@ -218,8 +233,18 @@ public class BankDAOImpl implements BankDAO {
 		}
 	}
 
-
+	public void createAccount(int userId) {
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "{call SP_NEW_ACCOUNT(?)}";
+			CallableStatement cs = con.prepareCall(sql);
+			cs.setInt(1, userId);
+			cs.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
 	
 	//what about their accounts? just the empty accounts? and their contact information?
 	
@@ -243,4 +268,5 @@ public class BankDAOImpl implements BankDAO {
 		}
 	}
 
+	
 }
