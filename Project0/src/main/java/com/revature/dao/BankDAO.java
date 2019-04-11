@@ -18,4 +18,8 @@ public interface BankDAO {
 	public double getBalance(int userId, String Account);
     public void updateBalance(String account, double balance);
     public void deleteAccount(String user, String account);
+    public void deleteAllUsers();
 }
+
+
+//would it be easier to create an object that holds all of an users/accounts data instead of sending a new request to the DB every time?
