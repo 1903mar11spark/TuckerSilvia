@@ -187,6 +187,19 @@ public class BankDAOImpl implements BankDAO {
 		}
 		return exists;
 	}
+	public void newTransaction(int type, double amt, int accountId) {
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "INSERT INTO TRANSACTIONS (TRANSACTION_TYPE, TRANSACTION_AMT)"
+					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, accountId);
+			ResultSet rs = stmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+	}
 
 
 }

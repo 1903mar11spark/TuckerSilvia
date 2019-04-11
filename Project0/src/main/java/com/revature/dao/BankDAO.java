@@ -18,4 +18,5 @@ public interface BankDAO {
     public void updateBalance(int account, double balance);
     public void deleteAccount(int userId);
     public boolean existingAccount(int accountId);
+    public void newTransaction(int type, double amt, int accountId);
 }
