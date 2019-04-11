@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.beans.BankUsers;
+import com.revature.beans.Transactions;
 import com.revature.beans.Accounts;
 
 import com.revature.util.ConnectionUtil;
@@ -171,6 +172,32 @@ public class BankDAOImpl implements BankDAO {
 		}
 	}
 	
+	public double getBalanceDeposit(int account) {
+		double balance=0;
+		boolean exists = existingAccount(account);
+		if(exists) {
+		try (Connection con = ConnectionUtil.getConnection()){
+			String sql = "SELECT ACCOUNTS.BALANCE "
+					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, account);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				balance = rs.getDouble("BALANCE");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+		return balance;
+		}else {
+			System.out.println("Account does not exists");
+			System.out.println(" ");
+			return -1;
+		}
+	}
+	
 	public void updateBalance(int account, double balance) {
 		try (Connection con = ConnectionUtil.getConnection()){
 			String sql = "UPDATE ACCOUNTS "
@@ -219,19 +246,23 @@ public class BankDAOImpl implements BankDAO {
 		return exists;
 
 	}
-	public void newTransaction(int type, double amt, int accountId) {
+	public void newTransaction(String type, double amt, String date, int accountId) {
 		try (Connection con = ConnectionUtil.getConnection()){
-			String sql = "INSERT INTO TRANSACTIONS (TRANSACTION_TYPE, TRANSACTION_AMT)"
-					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
+			String sql = "INSERT INTO TRANSACTIONS (TRANSACTION_TYPE, TRANSACTION_AMT, TRANSACTION_DATE, ACCOUNT_ID)"
+					+ " VALUES(?,?,?,?)";
 			
 			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setInt(1, accountId);
+			stmt.setString(1, type);
+			stmt.setDouble(2, amt);
+			stmt.setString(3, date);
+			stmt.setInt(4, accountId);
 			ResultSet rs = stmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
 		}
 	}
+
 
 	public void createAccount(int userId) {
 		try (Connection con = ConnectionUtil.getConnection()){
@@ -244,6 +275,32 @@ public class BankDAOImpl implements BankDAO {
 			e.printStackTrace();
 		}
 	}
+
+	
+	 public List<Transactions>getTransactions(int account){
+		 List<Transactions> t1 = new ArrayList<Transactions>();
+			try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "SELECT TRANSACTIONS.TRANSACTION_ID, TRANSACTIONS.TRANSACTION_TYPE, TRANSACTIONS.TRANSACTION_AMT, TRANSACTIONS.TRANSACTION_DATE,TRANSACTIONS.ACCOUNT_ID"	
+						+ " FROM TRANSACTIONS WHERE ACCOUNT_ID = ?";
+				
+				PreparedStatement stmt = con.prepareStatement(sql);
+				stmt.setInt(1,account);
+				ResultSet rs = stmt.executeQuery();
+				
+				while (rs.next()) {
+					int transactionId = rs.getInt("TRANSACTION_ID");
+					String transactionType = rs.getString("TRANSACTION_TYPE");
+					double transactionAmt = rs.getDouble("TRANSACTION_AMT");
+					String transactionDate = rs.getString("TRANSACTION_DATE");
+					int accountId = rs.getInt("ACCOUNT_ID");
+					t1.add(new Transactions (transactionId, transactionType, transactionAmt,transactionDate,account));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return t1;
+	 }
+
 	
 	
 	//what about their accounts? just the empty accounts? and their contact information?

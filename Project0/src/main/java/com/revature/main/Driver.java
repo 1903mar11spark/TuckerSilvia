@@ -1,8 +1,10 @@
 package com.revature.main;
 
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import com.revature.beans.BankUsers;
+import com.revature.beans.Transactions;
 import com.revature.beans.Accounts;
 import com.revature.dao.BankDAO;
 import com.revature.dao.BankDAOImpl;
@@ -38,12 +40,15 @@ public class Driver {
 			switch(privilege) {
 			case 0:
 				while (session) {
+					System.out.println("********************************************************************");
 					System.out.println("Welcome: " + user + " Choose a Transaction");
 					System.out.println("1 View Accounts and balance");
 					System.out.println("2 Delete Account");
 					System.out.println("3 Withdraw from account");
 					System.out.println("4 Deposit into Account");
-					System.out.println("5 Logout");
+					System.out.println("5 Transactions Log");
+					System.out.println("6 Logout");
+					System.out.println("********************************************************************");
 					selection = uInput.nextInt();
 					switch(selection) {
 						case 1:
@@ -84,12 +89,15 @@ public class Driver {
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							System.out.println("Select amount to withdraw: ");
-							amount = uInput.nextInt();
+							amount = uInput.nextDouble();
 							balance = bd.getBalance(userId, account);
 							if(balance > amount) {
 								balance = balance - amount;
 								//insert new transaction to log
+								String type = "Withdrawal";
+								String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
 								bd.updateBalance(account, balance);
+								bd.newTransaction(type, balance,date,account);
 								System.out.println("Please take your cash ");
 								System.out.println(" ");
 							}else {
@@ -101,15 +109,26 @@ public class Driver {
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							System.out.println("Select amount to deposit: ");
-							amount = uInput.nextInt();
-							balance = bd.getBalance(userId, account);
+							amount = uInput.nextDouble();
+							balance = bd.getBalanceDeposit(account);
 							balance = balance + amount;
-							//insert new transaction to log
+							String type = "Deposit";
+							String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
 							bd.updateBalance(account, balance);
-							System.out.println("Deposit has been succesfull ");
+							bd.newTransaction(type,amount,date,account);
+							System.out.println("Deposit has been succesfull on: " + date);
 							System.out.println(" ");
 							break;
 						case 5:
+							System.out.println("Select the account: ");
+							account = uInput.nextInt();
+							List<Transactions> transactions = bd.getTransactions(account);
+							for (Transactions a:transactions) {
+								System.out.println(a);
+							}
+							
+							break;
+						case 6:
 							System.out.println("Log out? 1 Yes 2 No");
 							selection = uInput.nextInt();
 							if(selection ==1) {
@@ -133,12 +152,14 @@ public class Driver {
 				break;
 			case 1:
 				while (session) {
+					System.out.println("********************************************************************");
 					System.out.println("Welcome: " + user + " Choose a Transaction");
 					System.out.println("1 View Accounts");
 					System.out.println("2 Create Account");
 					System.out.println("3 Update Account");
 					System.out.println("4 Delete all users");
 					System.out.println("5 Logout");
+					System.out.println("********************************************************************");
 					selection = uInput.nextInt();
 					switch(selection) {
 						case 1:
@@ -190,7 +211,9 @@ public class Driver {
 				
 				System.out.println("Please input your user name: ");
 				String newUser = uInput.nextLine();
-				newUser= uInput.nextLine();
+
+				newUser = uInput.nextLine();
+
 				System.out.println(" please input your password: ");
 				String newPass= uInput.nextLine();
 				System.out.println("Please input your first name: ");

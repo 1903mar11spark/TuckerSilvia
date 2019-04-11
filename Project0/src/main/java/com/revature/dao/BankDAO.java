@@ -3,6 +3,7 @@ package com.revature.dao;
 import java.util.List;
 
 import com.revature.beans.BankUsers;
+import com.revature.beans.Transactions;
 import com.revature.beans.Accounts;
 
 
@@ -18,14 +19,14 @@ public interface BankDAO {
     public void deleteAllUsers();
 
 	public double getBalance(int userId, int account);
+	public double getBalanceDeposit(int account);
     public void updateBalance(int account, double balance);
     public void deleteAccount(int userId);
     public boolean existingAccount(int accountId);
-
-    public void newTransaction(int type, double amt, int accountId);
+    public void newTransaction(String type, double amt,String date, int accountId);
+    public List<Transactions>getTransactions(int account);
 
 }
 
-//need a create account method
 
 //would it be easier to create an object that holds all of an users/accounts data instead of sending a new request to the DB every time?
