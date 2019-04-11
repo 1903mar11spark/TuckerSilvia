@@ -10,6 +10,7 @@ public class Accounts {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public Accounts(int accountID, BankUsers user, double balance) {
 		super();
 		this.accountID = accountID;

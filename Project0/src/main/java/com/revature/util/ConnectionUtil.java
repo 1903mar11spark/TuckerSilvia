@@ -16,16 +16,16 @@ public class ConnectionUtil {
 	private static Connection connection = null;
 	private static Properties properties = null;
 	//this should not be static, if static will only create connection when class first loads
-	{
-		try {
-			properties = new Properties();
-			properties.load(new FileInputStream("src/main/resources/connection.prop"));
-			Class.forName(properties.getProperty(DB_DRIVER_CLASS));
-			connection = DriverManager.getConnection(properties.getProperty(DB_URL),properties.getProperty(DB_USERNAME) , properties.getProperty(DB_PASSWORD) );
-		} catch (ClassNotFoundException | SQLException | IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	{
+//		try {
+//			properties = new Properties();
+//			properties.load(new FileInputStream("src/main/resources/connection.prop"));
+//			Class.forName(properties.getProperty(DB_DRIVER_CLASS));
+//			connection = DriverManager.getConnection(properties.getProperty(DB_URL),properties.getProperty(DB_USERNAME) , properties.getProperty(DB_PASSWORD) );
+//		} catch (ClassNotFoundException | SQLException | IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public static Connection getConnection(){
 		

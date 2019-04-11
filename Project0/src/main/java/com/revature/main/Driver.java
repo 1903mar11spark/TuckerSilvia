@@ -26,12 +26,8 @@ public class Driver {
 		int selection;
 		boolean exists;
 
-		exists = login(user,pass);
+		exists = bd.login(user,pass);
 		
-		System.out.println( login(user, pass));
-
-//two exists variables 
-
 		
 		int userId;
 		userId = bd.getUserId(user);
@@ -40,7 +36,7 @@ public class Driver {
 		double balance;
 		double amount;
 		if (exists) {
-			int privilege = bd.privileges(user, pass);
+			int privilege = bd.privileges(userId);
 			switch(privilege) {
 			case 0:
 				while (session) {
@@ -167,8 +163,15 @@ public class Driver {
 					selection = uInput.nextInt();
 					switch(selection) {
 						case 1:
+							List<Accounts> accounts = bd.getAccounts(userId);
+							for (Accounts a:accounts) {
+								System.out.println(a);
+							}
 							break;
 						case 2:
+							System.out.println("Enter User_Id of new account holder");
+							selection = uInput.nextInt();
+							bd.createAccount(selection);
 							break;
 						case 3:
 							break;
@@ -205,9 +208,12 @@ public class Driver {
 			int response = uInput.nextInt();
 			switch (response) {
 			case 1:
+				
 				System.out.println("Please input your user name: ");
 				String newUser = uInput.nextLine();
+
 				newUser = uInput.nextLine();
+
 				System.out.println(" please input your password: ");
 				String newPass= uInput.nextLine();
 				System.out.println("Please input your first name: ");
@@ -226,18 +232,6 @@ public class Driver {
 		}
 		uInput.close();
 	}
-	
-
-	private static boolean login(String user, String pass) {
-		BankDAO bd = new BankDAOImpl();
-		String p = bd.checkLogin(user);
-		System.out.println("password entered "+pass+" expected "+p);
-		if (p.equals(pass)) {
-			return true;
-		}else
-		return false;
-	}
-
 	
 }
 
