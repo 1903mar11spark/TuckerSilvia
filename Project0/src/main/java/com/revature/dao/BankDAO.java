@@ -22,7 +22,8 @@ public interface BankDAO {
     public void deleteAccount(int userId);
     public boolean existingAccount(int accountId);
 
-}
+    public void newTransaction(int type, double amt, int accountId);
+
 
 
 //would it be easier to create an object that holds all of an users/accounts data instead of sending a new request to the DB every time?
