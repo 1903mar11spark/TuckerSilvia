@@ -224,6 +224,7 @@ public class BankDAOImpl implements BankDAO {
 	//what about their accounts? just the empty accounts? and their contact information?
 	
 	//DO NOT RUN THIS, IT MAY ACTUALLY WORK
+	//never mind it wont work because the USER_ID is attached to other tables. Need to delete cascade
 	public void deleteAllUsers() {
 		
 		try (Connection con = ConnectionUtil.getConnection()){
