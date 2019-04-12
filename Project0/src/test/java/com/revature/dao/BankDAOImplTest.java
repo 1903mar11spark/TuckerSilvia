@@ -12,17 +12,62 @@ import com.revature.beans.Transactions;
 
 public class BankDAOImplTest {
 
+	private static final BankDAOImpl bank = new BankDAOImpl();
+
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testSuper() {
+		assertTrue(bank.login("TheBoss","Password"));
 	}
 	@Test
-	public void loginTest() {
-		String use="TheBoss";
-		String pas="Password";
-		assertTrue(BankDAOImpl.login(use,pas));
+	public void testReg() {
+		assertTrue(bank.login("ClientOne","CPassw0rd"));
+	}
+	@Test
+	public void testBadUser() {
+		assertFalse(bank.login("TheBos","Password"));
+	}
+	@Test
+	public void testBadPass() {
+		assertTrue(bank.login("TheBoss","Passord"));
+	}
+	@Test
+	public void testUser() {
+		assertEquals(26, bank.getUserId("TheBoss"));
+	}
+	@Test
+	public void testInvalid() {
+		assertEquals(0, bank.getUserId("Theoss"));
+	}
+	@Test
+	public void testPrivileges() {
+		assertEquals(0,bank.privileges(28));
+	}
+	@Test
+	public void testSuperPrivileges() {
+		assertEquals(1 ,bank.privileges(27));
+	}
+	@Test
+	public void testInvalidPrivileges() {
+		assertEquals(0, bank.privileges(3));
+	}
+	@Test
+	public void testBalance () {
+		assertEquals(1000, bank.getBalance(26, 10));
 	}
 
+	
+	@Test
+	public void testExists() {
+		assertTrue(bank.existingAccount(10));
+	}
+	@Test
+	public void testDoesNotExists() {
+		assertFalse(bank.existingAccount(1));
+	}
+	@Test
+	public void testZeroNotExists() {
+		assertFalse(bank.existingAccount(0));
+	}
 }
 
 
