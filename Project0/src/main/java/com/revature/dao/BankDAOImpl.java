@@ -150,7 +150,6 @@ public class BankDAOImpl implements BankDAO {
 	public double getBalance(int userId, int account) {
 		double balance=0;
 		boolean exists = existingAccount(account);
-		//System.out.println("Account:" + exists);
 		if(exists) {
 		try (Connection con = ConnectionUtil.getConnection()){
 			String sql = "SELECT ACCOUNTS.BALANCE "
@@ -163,7 +162,6 @@ public class BankDAOImpl implements BankDAO {
 			while (rs.next()) {
 				balance = rs.getDouble("BALANCE");
 			}
-			//System.out.println("Current balance: " + balance);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -177,20 +175,26 @@ public class BankDAOImpl implements BankDAO {
 		}
 	}
 	
-	public double getBalanceDeposit(int account) {
+	public double getBalanceDeposit(int account,int userId) {
 		double balance=0;
 		boolean exists = existingAccount(account);
 		if(exists) {
-		try (Connection con = ConnectionUtil.getConnection()){
-			String sql = "SELECT ACCOUNTS.BALANCE "
-					+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ?";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setInt(1, account);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				balance = rs.getDouble("BALANCE");
+			try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "SELECT ACCOUNTS.BALANCE "
+						+ "FROM ACCOUNTS WHERE ACCOUNT_ID = ? AND USER_ID = ?";
+				
+				PreparedStatement stmt = con.prepareStatement(sql);
+				stmt.setInt(1, account);
+				stmt.setInt(2, userId);
+				ResultSet rs = stmt.executeQuery();
+				if(rs.next()) {
+				while (rs.next()) {
+					balance = rs.getDouble("BALANCE");
+				}
 			}
+			else {
+				return balance = -1;
+				}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			
@@ -287,11 +291,9 @@ public class BankDAOImpl implements BankDAO {
 			try (Connection con = ConnectionUtil.getConnection()){
 				String sql = "SELECT TRANSACTIONS.TRANSACTION_ID, TRANSACTIONS.TRANSACTION_TYPE, TRANSACTIONS.TRANSACTION_AMT, TRANSACTIONS.TRANSACTION_DATE,TRANSACTIONS.ACCOUNT_ID"	
 						+ " FROM TRANSACTIONS WHERE ACCOUNT_ID = ?";
-				
 				PreparedStatement stmt = con.prepareStatement(sql);
 				stmt.setInt(1,account);
 				ResultSet rs = stmt.executeQuery();
-				
 				while (rs.next()) {
 					int transactionId = rs.getInt("TRANSACTION_ID");
 					String transactionType = rs.getString("TRANSACTION_TYPE");
@@ -304,6 +306,22 @@ public class BankDAOImpl implements BankDAO {
 				e.printStackTrace();
 			}
 			return t1;
+	 }
+
+	 public void updateUser(String user, String pass, String fName, String lName, int userId) {
+		 try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "{call SP_UPDATE_ACCOUNT(?,?,?,?,?)}";
+				CallableStatement cs = con.prepareCall(sql);
+				cs.setString(1, user);
+				cs.setString(2, pass);
+				cs.setString(3, fName);
+				cs.setString(4, lName);
+				cs.setInt(5, userId);
+				cs.execute();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	 }
 
 	 public void updateContact(String phone, int userId, String email, String address, int zip, String region) {
@@ -342,25 +360,28 @@ public class BankDAOImpl implements BankDAO {
 	 }
 	
 	
-	//DO NOT RUN THIS, IT MAY ACTUALLY WORK
-	//never mind it wont work because the USER_ID is attached to other tables. Need to delete cascade
-	public void deleteAllUsers() {
-		
-		try (Connection con = ConnectionUtil.getConnection()){
-			String sql = "DELETE * "
-					+ "FROM BANK_USERS";
-			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				rs.deleteRow();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
 	
+	 public void deleteUsers() {
+			try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "SELECT USER_ID FROM BANK_USERS";
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);
+				while (rs.next()) {
+					int userId = rs.getInt("USER_ID");
+					try {
+						String sql2 = "DELETE "
+								+ "FROM BANK_USERS WHERE USER_ID = ?";
+						PreparedStatement stmt2 = con.prepareStatement(sql2);
+						stmt2.setInt(1, userId);
+						stmt2.executeQuery();
+					}catch(Error e) {
+						e.printStackTrace();
+						continue;
+					}
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	 }	
 }
