@@ -301,9 +301,41 @@ public class BankDAOImpl implements BankDAO {
 			return t1;
 	 }
 
+	 public void updateContact(String phone, int userId, String email, String address, int zip, String region) {
+		 try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "UPDATE CONTACT SET PHONE = ?, EMAIL = ?, STREET_ADDRESS =?, ZIPCODE =? , REGION = ?)";
+				PreparedStatement stmt = con.prepareStatement(sql);
+				stmt.setString(1, phone);
+				stmt.setString(2, email);
+				stmt.setString(3, address);
+				stmt.setInt(4, zip);
+				stmt.setString(5, region);
+				ResultSet rs = stmt.executeQuery();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				
+			}
+	 }
+	 
+	 public void setContactInfo(String phone, int userId, String email, String address, int zip, String region){
+			 try (Connection con = ConnectionUtil.getConnection()){
+					String sql = "INSERT INTO CONTACT (PHONE, USER_ID, EMAIL, STREET_ADDRESS, ZIPCODE, REGION)"
+							+ " VALUES(?,?,?,?,?,?)";
+					
+					PreparedStatement stmt = con.prepareStatement(sql);
+					stmt.setString(1, phone);
+					stmt.setInt(2, userId);
+					stmt.setString(3, email);
+					stmt.setString(4, address);
+					stmt.setInt(5, zip);
+					stmt.setString(6, region);
+					ResultSet rs = stmt.executeQuery();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					
+				}
+	 }
 	
-	
-	//what about their accounts? just the empty accounts? and their contact information?
 	
 	//DO NOT RUN THIS, IT MAY ACTUALLY WORK
 	//never mind it wont work because the USER_ID is attached to other tables. Need to delete cascade

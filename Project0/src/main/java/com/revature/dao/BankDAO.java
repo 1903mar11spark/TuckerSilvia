@@ -25,6 +25,8 @@ public interface BankDAO {
     public boolean existingAccount(int accountId);
     public void newTransaction(String type, double amt,String date, int accountId);
     public List<Transactions>getTransactions(int account);
+    public void setContactInfo(String phone, int userId, String email, String address, int zip, String region);
+    public void updateContact (String phone, int userId, String email, String address, int zip, String region);
 
 }
 
