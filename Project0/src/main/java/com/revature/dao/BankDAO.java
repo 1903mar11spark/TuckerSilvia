@@ -10,7 +10,7 @@ import com.revature.beans.Accounts;
 public interface BankDAO {
 
 	public List<BankUsers> getUsers();
-	public boolean login(String user, String pass);
+	public int login(String user, String pass);
 	public int getUserId(String user);
 	public List<Accounts> getAccounts(int userId);
 	public int privileges(int userID);

@@ -25,7 +25,7 @@ public class Driver {
 		System.out.println("Please input your password: ");
 		String pass = uInput.nextLine();
 		int selection;
-		boolean exists;
+		int exists;
 		exists = bd.login(user,pass);
 		int userId;
 		userId = bd.getUserId(user);
@@ -33,7 +33,7 @@ public class Driver {
 		int account;
 		double balance;
 		double amount;
-		if (exists) {
+		if (exists == 1) {
 			int privilege = bd.privileges(userId);
 			switch(privilege) {
 			case 0:
@@ -365,7 +365,9 @@ public class Driver {
 				break;
 			default:
 				break;
-			}	
+		}else if(exists == 0) {
+			 System.out.println("Incorrect Password");
+			 System.out.println(" ");
 		}else {
 			System.out.println("Your user was not found, would you like to create a new user? 1 Yes 2 No ");
 			int response = uInput.nextInt();

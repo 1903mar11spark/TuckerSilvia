@@ -42,8 +42,8 @@ public class BankDAOImpl implements BankDAO {
 	}
 
 
-	public boolean login(String user, String pass) {
-	
+	public int login(String user, String pass) {
+		int status =0;
 		try(Connection con = ConnectionUtil.getConnection()){
 			String sql = "SELECT BANK_USERS.PASWORD FROM BANK_USERS WHERE USER_NAME=?";
 			PreparedStatement stmt = con.prepareStatement(sql);
@@ -52,14 +52,19 @@ public class BankDAOImpl implements BankDAO {
 			while(rs.next()) {
 				String Cpass = rs.getString("PASWORD");
 				 if (pass.equals(Cpass)) {
-					 return true;
+					 status = 1;
+					 return status;
+				 }else {
+					
+					 status = 0;
+					 return status;
 				 }
       }
       } catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-  		return false;
+  		return status = 2;
 	}
 	
 	public int getUserId(String user) {
