@@ -316,6 +316,8 @@ public class BankDAOImpl implements BankDAO {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+	 }
 
 	 public void updateContact(String phone, int userId, String email, String address, int zip, String region) {
 		 try (Connection con = ConnectionUtil.getConnection()){
