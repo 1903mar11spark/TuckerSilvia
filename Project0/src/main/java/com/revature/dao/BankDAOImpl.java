@@ -187,14 +187,10 @@ public class BankDAOImpl implements BankDAO {
 				stmt.setInt(1, account);
 				stmt.setInt(2, userId);
 				ResultSet rs = stmt.executeQuery();
-				if(rs.next()) {
 				while (rs.next()) {
 					balance = rs.getDouble("BALANCE");
 				}
-			}
-			else {
-				return balance = -1;
-				}
+	
 		} catch (SQLException e) {
 			e.printStackTrace();
 			

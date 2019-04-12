@@ -16,19 +16,19 @@ public class BankDAOImplTest {
 
 	@Test
 	public void testSuper() {
-		assertTrue(bank.login("TheBoss","Password"));
+		assertEquals(1,bank.login("TheBoss","Password"));
 	}
 	@Test
 	public void testReg() {
-		assertTrue(bank.login("ClientOne","CPassw0rd"));
+		assertEquals(1,bank.login("ClientOne","CPassw0rd"));
 	}
 	@Test
 	public void testBadUser() {
-		assertFalse(bank.login("TheBos","Password"));
+		assertEquals(0,bank.login("TheBos","Password"));
 	}
 	@Test
 	public void testBadPass() {
-		assertTrue(bank.login("TheBoss","Passord"));
+		assertEquals(0,bank.login("TheBoss","Passord"));
 	}
 	@Test
 	public void testUser() {
