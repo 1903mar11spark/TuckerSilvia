@@ -177,14 +177,14 @@ public class Driver {
 					System.out.println("Welcome: " + user + " Choose a Transaction");
 					System.out.println("1 View Accounts");
 					System.out.println("2 Delete Account");
-          //add deposits!
 					System.out.println("3 Withdraw from account");
-					System.out.println("4 Transactions Log");
-					System.out.println("5 Create Account");
-					System.out.println("6 Update Account");
-  				System.out.println("7 Update User Contact Info");        
-					System.out.println("8 Delete all users");
+					System.out.println("4 Deposit into account");
+					System.out.println("5 Transactions Log");
+					System.out.println("6 Create Account");
+					System.out.println("7 Update Account");
+					System.out.println("8 Update User Contact Info");        
 					System.out.println("9 Logout");
+					System.out.println("0 Delete all users");
 
 					System.out.println("********************************************************************");
 					selection = uInput.nextInt();
@@ -246,20 +246,37 @@ public class Driver {
 						case 4:
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
+							System.out.println("Select amount to deposit: ");
+							amount = uInput.nextDouble();
+							balance = bd.getBalanceDeposit(account,userId);
+							if(balance>0) {
+								balance = balance + amount;
+								String type = "Deposit";
+								String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+								bd.updateBalance(account, balance);
+								bd.newTransaction(type,amount,date,account);
+								System.out.println("Deposit has been succesfull on: " + date);
+								System.out.println(" ");}
+							else {
+								System.out.println("Invalid account ID");
+							}
+							break;
+						case 5:
+							System.out.println("Select the account: ");
+							account = uInput.nextInt();
 							List<Transactions> transactions = bd.getTransactions(account);
 							System.out.println("Transaction History: ");
 							for (Transactions a:transactions) {
 								System.out.println(a);
 							}
 							break;
-						case 5:
-
+						case 6:
 							System.out.println("Enter User_Id of new account holder");
 							selection = uInput.nextInt();
 							bd.createAccount(selection);
 							System.out.println("Account Created");
 							break;
-						case 6:
+						case 7:
 							System.out.println("Enter User_Id of account ");
 							int nUserId = uInput.nextInt();
 							System.out.println("Please input new user name: ");
@@ -280,8 +297,8 @@ public class Driver {
 							}
 							break;
               						
-						case 7:
-              	System.out.println("Please type user id to modify: ");
+						case 8:
+							System.out.println("Please type user id to modify: ");
 							int userIdUpdate= uInput.nextInt();
 							System.out.println("please input your phone number: ");
 							String phone= uInput.nextLine();
@@ -298,7 +315,7 @@ public class Driver {
 							bd.setContactInfo(phone, userIdUpdate, email, address, zip, region);
 							System.out.println("** Account succesfully Updated **");
 							break;
-						case 8:
+						case 0:
 							System.out.println("Are you sure you want to delete all users? 1 Yes 2 No ");
 							int response = uInput.nextInt();
 							switch (response) {
