@@ -2,7 +2,7 @@ package com.revature.beans;
 
 public class Contact {
 
-	private int phone;
+	private String phone;
 	private BankUsers userId;
 	private String email;
 	private String address;
@@ -14,7 +14,7 @@ public class Contact {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Contact(int phone, BankUsers userId, String email, String address, int zip, String region) {
+	public Contact(String phone, BankUsers userId, String email, String address, int zip, String region) {
 		super();
 		this.phone = phone;
 		this.userId = userId;
@@ -23,10 +23,10 @@ public class Contact {
 		this.zip = zip;
 		this.region = region;
 	}
-	public int getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public BankUsers getUserId() {

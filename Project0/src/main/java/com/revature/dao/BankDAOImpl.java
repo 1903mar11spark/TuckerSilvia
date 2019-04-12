@@ -316,8 +316,43 @@ public class BankDAOImpl implements BankDAO {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
+	 public void updateContact(String phone, int userId, String email, String address, int zip, String region) {
+		 try (Connection con = ConnectionUtil.getConnection()){
+				String sql = "UPDATE CONTACT SET PHONE = ?, EMAIL = ?, STREET_ADDRESS =?, ZIPCODE =? , REGION = ?)";
+				PreparedStatement stmt = con.prepareStatement(sql);
+				stmt.setString(1, phone);
+				stmt.setString(2, email);
+				stmt.setString(3, address);
+				stmt.setInt(4, zip);
+				stmt.setString(5, region);
+				ResultSet rs = stmt.executeQuery();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				
 			}
 	 }
+	 
+	 public void setContactInfo(String phone, int userId, String email, String address, int zip, String region){
+			 try (Connection con = ConnectionUtil.getConnection()){
+					String sql = "INSERT INTO CONTACT (PHONE, USER_ID, EMAIL, STREET_ADDRESS, ZIPCODE, REGION)"
+							+ " VALUES(?,?,?,?,?,?)";
+					
+					PreparedStatement stmt = con.prepareStatement(sql);
+					stmt.setString(1, phone);
+					stmt.setInt(2, userId);
+					stmt.setString(3, email);
+					stmt.setString(4, address);
+					stmt.setInt(5, zip);
+					stmt.setString(6, region);
+					ResultSet rs = stmt.executeQuery();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					
+				}
+	 }
+	
+	
 	
 	 public void deleteUsers() {
 			try (Connection con = ConnectionUtil.getConnection()){

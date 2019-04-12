@@ -41,11 +41,12 @@ public class Driver {
 					System.out.println("********************************************************************");
 					System.out.println("Welcome: " + user + " Choose a Transaction");
 					System.out.println("1 View Accounts and balance");
-					System.out.println("2 Delete Account");
-					System.out.println("3 Withdraw from account");
-					System.out.println("4 Deposit into Account");
-					System.out.println("5 Transactions Log");
-					System.out.println("6 Logout");
+					System.out.println("2 Update Contact Info");
+					System.out.println("3 Delete Account");
+					System.out.println("4 Withdraw from account");
+					System.out.println("5 Deposit into Account");
+					System.out.println("6 Transactions Log");
+					System.out.println("7 Logout");
 					System.out.println("********************************************************************");
 					selection = uInput.nextInt();
 					switch(selection) {
@@ -57,6 +58,22 @@ public class Driver {
 							}
 							break;
 						case 2:
+							System.out.println("please input your phone number: ");
+							String phone= uInput.nextLine();
+							phone= uInput.nextLine();
+							System.out.println("Please input your email: ");
+							String email= uInput.nextLine();
+							System.out.println("Please input your street address: ");
+							String address= uInput.nextLine();
+							System.out.println("Please input your zip code: ");
+							int zip = uInput.nextInt();
+							System.out.println("Please input your region: ");
+							String region= uInput.nextLine();
+							region= uInput.nextLine();
+							bd.setContactInfo(phone, userId, email, address, zip, region);
+							System.out.println("** Account succesfully Updated **");
+							break;
+						case 3:
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							System.out.println("Getting account information...");
@@ -84,7 +101,7 @@ public class Driver {
 								System.out.println(" ");
 							}
 							break;
-						case 3:
+						case 4:
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							System.out.println("Select amount to withdraw: ");
@@ -103,7 +120,7 @@ public class Driver {
 								System.out.println(" ");
 							}
 							break;
-						case 4:
+						case 5:
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							System.out.println("Select amount to deposit: ");
@@ -121,7 +138,7 @@ public class Driver {
 								System.out.println("Invalid account ID");
 							}
 							break;
-						case 5:
+						case 6:
 							System.out.println("Select the account: ");
 							account = uInput.nextInt();
 							List<Transactions> transactions = bd.getTransactions(account);
@@ -131,7 +148,7 @@ public class Driver {
 							}
 							
 							break;
-						case 6:
+						case 7:
 							System.out.println("Log out? 1 Yes 2 No");
 							selection = uInput.nextInt();
 							if(selection ==1) {
@@ -159,13 +176,16 @@ public class Driver {
 					System.out.println("********************************************************************");
 					System.out.println("Welcome: " + user + " Choose a Transaction");
 					System.out.println("1 View Accounts");
-					System.out.println("2 Withdraw from account");
-					System.out.println("3 Deposit into Account");
+					System.out.println("2 Delete Account");
+          //add deposits!
+					System.out.println("3 Withdraw from account");
 					System.out.println("4 Transactions Log");
 					System.out.println("5 Create Account");
 					System.out.println("6 Update Account");
-					System.out.println("7 Delete all users");
-					System.out.println("8 Logout");
+  				System.out.println("7 Update User Contact Info");        
+					System.out.println("8 Delete all users");
+					System.out.println("9 Logout");
+
 					System.out.println("********************************************************************");
 					selection = uInput.nextInt();
 					switch(selection) {
@@ -233,6 +253,7 @@ public class Driver {
 							}
 							break;
 						case 5:
+
 							System.out.println("Enter User_Id of new account holder");
 							selection = uInput.nextInt();
 							bd.createAccount(selection);
@@ -258,7 +279,26 @@ public class Driver {
 								System.out.println("Passwords did not match");
 							}
 							break;
+              						
 						case 7:
+              	System.out.println("Please type user id to modify: ");
+							int userIdUpdate= uInput.nextInt();
+							System.out.println("please input your phone number: ");
+							String phone= uInput.nextLine();
+							phone= uInput.nextLine();
+							System.out.println("Please input your email: ");
+							String email= uInput.nextLine();
+							System.out.println("Please input your street address: ");
+							String address= uInput.nextLine();
+							System.out.println("Please input your zip code: ");
+							int zip = uInput.nextInt();
+							System.out.println("Please input your region: ");
+							String region= uInput.nextLine();
+							region= uInput.nextLine();
+							bd.setContactInfo(phone, userIdUpdate, email, address, zip, region);
+							System.out.println("** Account succesfully Updated **");
+							break;
+						case 8:
 							System.out.println("Are you sure you want to delete all users? 1 Yes 2 No ");
 							int response = uInput.nextInt();
 							switch (response) {
@@ -284,7 +324,8 @@ public class Driver {
 								break;
 							}System.out.println("*snap*");
 							break;
-						case 8:
+						case 9:
+
 							System.out.println("Log out? 1 Yes 2 No");
 							selection = uInput.nextInt();
 							if(selection ==1) {
@@ -322,8 +363,25 @@ public class Driver {
 				String fName = uInput.nextLine();
 				System.out.println(" please input your last name: ");
 				String lName= uInput.nextLine();
+				System.out.println(" please input your phone number: ");
+				String phone= uInput.nextLine();
+				System.out.println(" please input your email: ");
+				String email= uInput.nextLine();
+				System.out.println(" please input your street address: ");
+				String address= uInput.nextLine();
+				System.out.println(" please input your zip code: ");
+				int zip = uInput.nextInt();
+				System.out.println(" please input your region: ");
+				String region= uInput.nextLine();
+				region= uInput.nextLine();
 				bd.newUser(newUser, newPass, fName, lName);
-				System.out.println("Thank you for creating an user account, please log in");
+
+				int userIdCheck = bd.getUserId(newUser);
+				bd.setContactInfo(phone, userIdCheck, email, address, zip, region);
+				System.out.println("** Account succesfully created **");
+				System.out.println("** Your user name is:  " + newUser + " UserId is: " + userIdCheck +" **");
+				System.out.println(" ");
+
 				break;
 			case 2:
 				System.out.println("Have a nice day");
