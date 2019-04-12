@@ -362,10 +362,10 @@ public class Driver {
 							break;
 					}
 				};
+				break;//break super 
+			default: //login switch
 				break;
-			default:
-				break;
-		}else if(exists == 0) {
+		}}else if(exists == 0) {
 			 System.out.println("Incorrect Password");
 			 System.out.println(" ");
 		}else {
@@ -412,7 +412,6 @@ public class Driver {
 			screen();
 		}
 		uInput.close();
+		}
 	}
-	
-}
 
