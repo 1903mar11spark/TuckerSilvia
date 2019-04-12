@@ -22,7 +22,7 @@ public class Transactions {
 		this.tDate = tDate;
 		this.accounts = accounts;
 	}
-	public Transactions(int transactionId, String tType, double tAmount, String tDate, int acountss) {
+	public Transactions(int transactionId, String tType, double tAmount, String tDate, int accountss) {
 		this.transactionId = transactionId;
 		this.tType = tType;
 		this.tAmount = tAmount;
