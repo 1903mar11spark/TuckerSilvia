@@ -1,4 +1,4 @@
 driver.class.name=java.sql.DriverManager
-db.url= jdbc:oracle:thin:@spark-1903march11.ceg6znln8r3f.us-east-2.rds.amazonaws.com:1521:ORCL
-db.username=admin
-db.password=Pikapika0227
+db.url= jdbc:oracle:thin:@******************:1521:ORCL
+db.username=**************
+db.password=************
